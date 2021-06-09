@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  backend:
+    build: ./server
+    ports:
+      - 10000:10000
+
+  frontend:
+    build: ./client
+    volumes:
+      - $PWD/client:/usr/local/apache2/htdocs/
+    ports:
+      - 10001:80

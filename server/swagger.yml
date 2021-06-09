@@ -1,0 +1,42 @@
+#https://editor.swagger.io/
+swagger: "2.0"
+info:
+  title: Go Sample API
+  description: 'This is a food API'
+  version: 0.1.0
+
+paths:
+  /food:
+    get:
+      summary: Returns a list of food
+      responses:
+        200:
+          description: Success!
+    post:
+      summary: Adds to the list of foods
+      responses:
+        200:
+          description: Success!
+  /food/{id}:
+    parameters:
+      - in: path
+        type: string
+        name: id
+        required: true
+        description: The food ID
+    get:
+      summary: Returns food at ID
+      responses:
+        200:
+          description: success!
+    put:
+      summary: Updates food at ID
+      responses:
+        200:
+          description: success!
+    delete:
+      summary: Deletes food at ID
+      responses:
+        200:
+          description: success!
+

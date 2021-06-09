@@ -1,6 +1,28 @@
 const BASE_URL = 'http://localhost:10000';
-const searchBtn = document.querySelector('#searchBtn')
 const addBtn = document.querySelector('#addBtn')
+/*
+Ajax = async javascript and XML,
+helps load data in background and display it on page w/o refresh
+Jquery provides several methods for ajax functionality
+Different browsers have diff ajax syntax, jqeury is universal
+Note: Ajax only works in a server
+$ = shortcut for jQuery, could replace $ with jQuery
+ */
+
+//document.ready
+//Ensures that jquery loads after website has loaded
+$(document).ready(() => {
+    $("#searchBtn").click(async () => {
+        $("#foodGet").html(await search());
+    });
+
+    $("#addBtn").click(async () => {
+        $("#foodGet").html(await add());
+        await getAll();
+    });
+
+    getAll();
+});
 
 const handleData = (jsonData) => {
     let formatted = "";
@@ -24,30 +46,28 @@ const parseData = (jsonData) => {
     return formatted;
 }
 
-const getData = async () => {
+const getAll = async () => {
     try {
         const response = await fetch(`${BASE_URL}/food`);
         let jsonData = await response.json();
         let parsedData = handleData(jsonData);
-
-        document.getElementById("foodsGet").innerHTML = parsedData;
+        $("#foodsGet").html(parsedData);
     } catch (errors) {
         console.error(errors);
     }
 }
 
 const search = async () => {
-    let formValue = document.querySelector("#searchInput").value;
+    let formValue = $("#searchInput").val();
     const response = await fetch(`${BASE_URL}/food/${formValue}`);
     let jsonData = await response.json();
-    let parsedData = handleData(jsonData);
-    document.querySelector("#foodGet").innerHTML = parsedData;
+    return handleData(jsonData);
 }
 
 const add = async () => {
-    let name = document.querySelector("#foodName").value;
-    let type = document.querySelector("#foodType").value;
-    let calories = document.querySelector("#foodCalories").value;
+    let name = $("#foodName").val();
+    let type = $("#foodType").val();
+    let calories = $("#foodCalories").val();
 
     let foodJson = {
         name, type, calories
@@ -59,18 +79,6 @@ const add = async () => {
 
     let jsonData = await response.json();
     let parsedData = handleData(jsonData);
-    document.querySelector("#foodAdd").innerHTML = "FOOD ADDED!"
-    document.querySelector("#foodAdd").innerHTML += "<br></br>" + parsedData;
-
+    let html = "FOOD ADDED! <br><br>" + parsedData
+    $("#foodAdd").html(html);
 }
-
-searchBtn.addEventListener('click', async () => {
-    await search();
-})
-
-addBtn.addEventListener('click', async () => {
-    await add();
-})
-
-//Load immediately
-getData();

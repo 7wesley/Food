@@ -1,84 +1,77 @@
 const BASE_URL = 'http://localhost:10000';
-const addBtn = document.querySelector('#addBtn')
-/*
-Ajax = async javascript and XML,
-helps load data in background and display it on page w/o refresh
-Jquery provides several methods for ajax functionality
-Different browsers have diff ajax syntax, jqeury is universal
-Note: Ajax only works in a server
-$ = shortcut for jQuery, could replace $ with jQuery
- */
+const app = Vue.createApp({
+     data() {
+         return {
+             allFood: '',
+             specificFood: '',
+             addedFood: '',
+             searchName: '',
+             name: '',
+             type: '',
+             calories: ''
+         }
+     },
+     methods: {
+         /** Searches for specific food **/
+         async search() {
+             const response = await fetch(`${BASE_URL}/food/${this.searchName}`);
+             let jsonData = await response.json();
+             this.specificFood = this.handleData(jsonData);
+         },
+         /** Adds a specific food **/
+         async add() {
+             let foodJson = {
+                 name: this.name,
+                 type: this.type,
+                 calories: this.calories
+             };
+             const response = await fetch(`${BASE_URL}/food`, {
+                 method: 'POST',
+                 body: JSON.stringify(foodJson)
+             });
 
-//document.ready
-//Ensures that jquery loads after website has loaded
-$(document).ready(() => {
-    $("#searchBtn").click(async () => {
-        $("#foodGet").html(await search());
-    });
+             let jsonData = await response.json();
+             let html = "FOOD ADDED! <br><br>" + this.handleData(jsonData);
+             this.addedFood = html;
+             await this.getFoods();
+         },
+         /** Gets all foods **/
+         async getFoods() {
+             try {
+                 const response = await fetch(`${BASE_URL}/food`);
+                 let jsonData = await response.json();
+                 this.allFood = this.handleData(jsonData);
+             } catch (errors) {
+                 console.error(errors);
+             }
+         },
+         /** Handles jsonData, whether its an array or just an object **/
+         handleData(jsonData) {
+             let formatted = "";
+             if (jsonData.length) {
+                 for (let obj of jsonData) {
+                     formatted += this.parseData(obj) + "<br></br>";
+                 }
+             }
+             else {
+                 formatted = this.parseData(jsonData)
+             }
+             return formatted;
+         },
+         /** Gets the keys from the object and constructs a string from it **/
+         parseData (jsonData)  {
+             let formatted = "";
+             for (let key of Object.keys(jsonData)) {
+                 formatted += jsonData[key] + " "
+             }
+             return formatted;
+         }
+     },
+    /** Runs at the start of execution **/
+     beforeMount() {
+         this.getFoods();
+     }
+ })
 
-    $("#addBtn").click(async () => {
-        $("#foodGet").html(await add());
-        await getAll();
-    });
-
-    getAll();
-});
-
-const handleData = (jsonData) => {
-    let formatted = "";
-    if (jsonData.length) {
-        for (let obj of jsonData) {
-            formatted += parseData(obj) + "<br></br>";
-        }
-    }
-    else {
-        formatted = parseData(jsonData)
-    }
-    return formatted;
-}
-
-//Json cannot be displayed in html, must be formatted
-const parseData = (jsonData) => {
-    let formatted = "";
-    for (let key of Object.keys(jsonData)) {
-        formatted += jsonData[key] + " "
-    }
-    return formatted;
-}
-
-const getAll = async () => {
-    try {
-        const response = await fetch(`${BASE_URL}/food`);
-        let jsonData = await response.json();
-        let parsedData = handleData(jsonData);
-        $("#foodsGet").html(parsedData);
-    } catch (errors) {
-        console.error(errors);
-    }
-}
-
-const search = async () => {
-    let formValue = $("#searchInput").val();
-    const response = await fetch(`${BASE_URL}/food/${formValue}`);
-    let jsonData = await response.json();
-    return handleData(jsonData);
-}
-
-const add = async () => {
-    let name = $("#foodName").val();
-    let type = $("#foodType").val();
-    let calories = $("#foodCalories").val();
-
-    let foodJson = {
-        name, type, calories
-    }
-    const response = await fetch(`${BASE_URL}/food`, {
-        method: 'POST',
-        body: JSON.stringify(foodJson)
-    });
-
-    let jsonData = await response.json();
-    let parsedData = handleData(jsonData);
-    let html = "FOOD ADDED! <br><br>" + parsedData
-    $("#foodAdd").html(html);
-}
+/**The div the app will be inserted to **/
+ app.mount('#app')

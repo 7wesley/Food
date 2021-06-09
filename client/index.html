@@ -4,26 +4,32 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>REST API</title>
+    <!-- jQuery and Ajax -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="app.js"></script>
 </head>
 
 <body>
-    <h1>Go REST API</h1>
-    <h3>Get all food:</h3>
-    <p id = "foodsGet"></p>
+    <div id = "app">
+        <h1>Go REST API</h1>
+        <h3>Get all food:</h3>
+        <p id = "foodsGet" v-html="allFood"></p>
 
-    <h3>Get specific food:</h3>
-    <input type = "text" placeholder = "Search ID here" id = "searchInput" />
-    <button id = "searchBtn">Submit</button>
-    <p id = "foodGet"></p>
+        <h3>Get specific food:</h3>
+        <input type = "text" placeholder = "Search ID here" v-model="searchName"/>
+        <button v-on:click="search()">Submit</button>
+        <p id = "foodGet" v-html="specificFood"></p>
 
-    <h3>Add food:</h3>
-    <input type = "text" placeholder = "Name" id = "foodName" />
-    <input type = "text" placeholder = "Type" id = "foodType" />
-    <input type = "text" placeholder = "Calories" id = "foodCalories" />
-    <button id = "addBtn">Submit</button>
-    <p id = "foodAdd"></p>
+        <h3>Add food:</h3>
+        <input type = "text" placeholder = "Name" v-model="name" />
+        <input type = "text" placeholder = "Type" v-model="type" />
+        <input type = "text" placeholder = "Calories" v-model="calories" />
+        <button v-on:click="add()">Submit</button>
+        <p id = "foodAdd" v-html="addedFood"></p>
+    </div>
 
+    <!-- Vue js -->
+    <script src="https://unpkg.com/vue@next"></script>
+    <!-- App -->
+    <script src="app.js"></script>
 </body>
 </html>

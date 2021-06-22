@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -47,6 +48,7 @@ func initRouter() {
 
 /** Program entry */
 func main() {
+	godotenv.Load()
 	host := os.Getenv("HOST")
 	dbPort := os.Getenv("DB_PORT")
 	user := os.Getenv("USER")

@@ -1,16 +1,26 @@
 version: '3'
 
 services:
+  database:
+    image: postgres
+    restart: always
+    ports:
+      - "10002:5432"
+    env_file: .env
+
   backend:
     build: ./server
     ports:
-      - 10000:10000
-    env_file:
-      $PWD/server/.env
+      - "10001:10001"
+    env_file: .env
+    depends_on:
+      - database
 
   frontend:
     build: ./client
     volumes:
       - $PWD/client:/usr/local/apache2/htdocs/
     ports:
-      - 10001:80
+      - "10000:80"
+    depends_on:
+      - backend

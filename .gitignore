@@ -1,0 +1,12 @@
+#frontend
+client/old.js
+
+#backend
+server/server
+server/Makefile
+.env
+.DS_Store
+.idea
+server/vendor
+server/go.mod
+server/go.sum

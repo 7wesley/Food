@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:10000';
+const BASE_URL = 'http://localhost:10001';
 const app = Vue.createApp({
      data() {
          return {
@@ -11,7 +11,6 @@ const app = Vue.createApp({
      methods: {
          /** Searches for specific food **/
          async search() {
-             console.log(this.$refs.searchName.value)
              const response = await fetch(`${BASE_URL}/food/${this.$refs.searchName.value}`);
              let jsonData = await response.json();
              this.specificFood = this.handleData(jsonData);

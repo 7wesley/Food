@@ -5,6 +5,8 @@ services:
     build: ./server
     ports:
       - 10000:10000
+    env_file:
+      $PWD/server/.env
 
   frontend:
     build: ./client

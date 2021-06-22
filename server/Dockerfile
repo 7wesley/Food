@@ -4,10 +4,11 @@ LABEL maintainer="unique <wesley>"
 
 WORKDIR /go/src/app
 
+COPY go.mod .
+COPY go.sum .
+
+#RUN go mod download
 COPY . .
 
-ENV PORT :10000
-
-RUN go build main.go
-
-CMD ["./main"]
+RUN go build
+CMD ["./server"]

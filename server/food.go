@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	_ "github.com/lib/pq"
 	"gorm.io/gorm"
 	"net/http"
 )

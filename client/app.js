@@ -5,25 +5,23 @@ const app = Vue.createApp({
              allFood: '',
              specificFood: '',
              addedFood: '',
-             searchName: '',
-             name: '',
-             type: '',
-             calories: ''
+             readMore: false
          }
      },
      methods: {
          /** Searches for specific food **/
          async search() {
-             const response = await fetch(`${BASE_URL}/food/${this.searchName}`);
+             console.log(this.$refs.searchName.value)
+             const response = await fetch(`${BASE_URL}/food/${this.$refs.searchName.value}`);
              let jsonData = await response.json();
              this.specificFood = this.handleData(jsonData);
          },
          /** Adds a specific food **/
          async add() {
              let foodJson = {
-                 name: this.name,
-                 type: this.type,
-                 calories: this.calories
+                 name: this.$refs.name.value,
+                 type: this.$refs.type.value,
+                 calories: this.$refs.calories.value
              };
              const response = await fetch(`${BASE_URL}/food`, {
                  method: 'POST',
@@ -31,7 +29,7 @@ const app = Vue.createApp({
              });
 
              let jsonData = await response.json();
-             let html = "FOOD ADDED! <br><br>" + this.handleData(jsonData);
+             let html = "FOOD ADDED! <br></br>" + this.handleData(jsonData);
              this.addedFood = html;
              await this.getFoods();
          },
@@ -54,21 +52,24 @@ const app = Vue.createApp({
                  }
              }
              else {
-                 formatted = this.parseData(jsonData)
+                 formatted = this.parseData(jsonData);
              }
              return formatted;
          },
          /** Gets the keys from the object and constructs a string from it **/
-         parseData (jsonData)  {
+         parseData(jsonData)  {
              let formatted = "";
              for (let key of Object.keys(jsonData)) {
-                 formatted += jsonData[key] + " "
+                 formatted += jsonData[key] + " ";
              }
              return formatted;
+         },
+         alterReadMore() {
+             this.readMore = !this.readMore;
          }
      },
     /** Runs at the start of execution **/
-     beforeMount() {
+     async beforeMount() {
          this.getFoods();
      }
  })

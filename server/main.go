@@ -48,12 +48,12 @@ func initRouter() {
 /** Program entry */
 func main() {
 	host := os.Getenv("HOST")
-	port := os.Getenv("PORT")
+	dbPort := os.Getenv("DB_PORT")
 	user := os.Getenv("USER")
 	dbname := os.Getenv("DBNAME")
 	password := os.Getenv("PASSWORD")
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		host, user, password, dbname, port)
+		host, user, password, dbname, dbPort)
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	handleErr(err)

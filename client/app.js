@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:10001';
+const BASE_URL = 'http://server:10001';
 const app = Vue.createApp({
      data() {
          return {

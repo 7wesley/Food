@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-configmap
+data:
+  host_url: postgres
+  db_port: "5432"
+  db_name: "wesley"
+  origin_allowed: client
+  host_port: ":10001"

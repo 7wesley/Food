@@ -1,7 +1,7 @@
 #https://editor.swagger.io/
 swagger: "2.0"
 info:
-  title: Go Sample API
+  title: Go Food API
   description: 'This is a food API'
   version: 0.1.0
 

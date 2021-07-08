@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+spec:
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+      - name: server
+        image: 7wesley/foodrestserver
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 10001
+        env:
+        - name: USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: postgres-username
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: postgres-password
+        - name: HOST
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-configmap
+              key: host_url
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-configmap
+              key: db_port
+        - name: DBNAME
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-configmap
+              key: db_name
+        - name: ORIGIN_ALLOWED
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-configmap
+              key: origin_allowed
+        - name: HOSTPORT
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-configmap
+              key: host_port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server
+spec:
+  selector:
+    app: server
+  type: LoadBalancer
+  ports:
+  - port: 10001 #service port
+    targetPort: 10001 #pod port
+    nodePort: 30001

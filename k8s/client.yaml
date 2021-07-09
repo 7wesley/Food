@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client
+  name: client-deployment
 spec:
   selector:
     matchLabels:
-      app: client
+      app: client-deployment
   template:
     metadata:
       labels:
-        app: client
+        app: client-deployment
     spec:
       containers:
       - name: client
@@ -21,21 +21,14 @@ spec:
         ports:
         - containerPort: 80
 ---
-#A servuce attached to a pod using its name
+#A service attached to a pod using its name
 apiVersion: v1
 kind: Service
 metadata:
-  name: client
+  name: client-service
 spec:
   selector:
-    app: client
-  #Make it an external service
-  #Assigns it an external IP address
-  #Pods are always given an interal ip (cluster-ip), but load
-  #balance gives an external IP
-  type: LoadBalancer
+    app: client-deployment
   ports:
-  - protocol: TCP
-    port: 80 #service port (the port to access the service)
+  - port: 80 #service port (the port to access the service)
     targetPort: 80 #container/pod port, must match containerport
-    nodePort: 30000 #external IP (30000-23767)

@@ -1,0 +1,17 @@
+#PersisentVolumeClaim is how you claim / allocate storage
+#to a specific pod. These are namespace bound while PV
+#is accessible to the entire cluster
+#It allows developers to say that they want a claim of the total storage
+#It references the PV to be used and how much storage is needed
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  storageClassName: standard #Minikube default
+  resources:
+    requests:
+      storage: 1Gi #Should be less than or equal to the PV
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce #Only one pod can read and write from this at once

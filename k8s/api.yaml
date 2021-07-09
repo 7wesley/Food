@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: server
+  name: api-deployment
 spec:
   selector:
     matchLabels:
-      app: server
+      app: api-deployment
   template:
     metadata:
       labels:
-        app: server
+        app: api-deployment
     spec:
       containers:
       - name: server
@@ -60,12 +60,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: server
+  name: api-service
 spec:
   selector:
-    app: server
-  type: LoadBalancer
+    app: api-deployment
   ports:
   - port: 10001 #service port
     targetPort: 10001 #pod port
-    nodePort: 30001

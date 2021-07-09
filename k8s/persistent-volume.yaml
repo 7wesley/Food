@@ -1,0 +1,20 @@
+#Persistent volume is a piece of cluster storage
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+  labels:
+    type: local
+spec:
+  #Using local node storage (minikube)
+  #storageClass is the supplier of the storage
+  #It allows kubernetes to interface with the type of storage
+  #storageClass example: azurefile
+  storageClassName: standard
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  #Where the volume is mounted to on the host machine
+  hostPath:
+    path: "/data/postgres-pv"

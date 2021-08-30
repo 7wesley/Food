@@ -1,0 +1,74 @@
+Notes taken during development:
+
+Docker
+————
+Containers are lightweight virtual machines because they use the host machine’s kernel. This makes them faster. VMs spawn their own kernels and are resource heavy.
+
+A container is a running instance of an image. An image is a template for the environment you want to spin up, or a snapshot of the environment at a point in time, or a snapshot of a container.
+If an image is a class, then a container is an instance of the class. You can have many containers that run off the same image.
+Furthermore, creating a container from an image adds a read-write file system on top and initializes various settings including network ports, the container name, and resource limits.
+
+Kubernetes
+—————
+Why are containers even used? Originally, orgs would run all their services on one physical server. The issue with this is that there was no way to define resource boundaries for applications and it caused resource allocation issues. If multiple apps run on the same physical server, there can be instances where apps would underperform due to resource hogging.
+
+The solution to this? Run each app on its own separate server. The problem is this did not scale as resources were underutilized and things became expensive. The solution then became to use VMs, which then became to use containers because they’re more lightweight. You can deploy multiple containers on a single server and have their resources isolated from one another. Also, if one service failed, it would crash everything on the server. With containers, it would only crash the one container and others would keep running.
+
+Another issue with the way things were done: If you wanted to scale apps (increase the amount of resources they can use to keep up with user demand), you would need to rewrite scripts, get new hardware, and do the exact same deployments multiple times. This can fall apart when dev teams need to make a new microservice. Where do you add this in when you already had an effective use of the hardware? Additionally, micro services should be able to be scaled individually, you shouldn’t have to rewrite everything.
+
+Kubernetes comes in to play here. It used for managing / orchestrating containers. It makes it so each container gets the appropriate resource allocation on a server and resources are being used efficiently. It also automatically restarts containers in case any issues occur, facilitates communication between containers, and deploys load balancers for all microservices.
+
+How Kubernetes works: It has a cluster which is a set of nodes that run containerized applications. A node is basically a computer/machine.
+A kubernetes cluster consists of a master node and workers nodes. The master node is the brains of the cluster. This manages all the worker nodes and makes the big decisions. Worker nodes are where the heavy lifting happens, such as running applications.
+
+Nodes can have multiple pods. A pod is the smallest running deployable unit in Kubernetes, and it encapsulates one or more applications. Within a pod you will have one main container. You can also have volumes (how data is shared). Kubernetes will expose a service so that people can access the pods, and this also acts as a load balancer so requests are distributed between the nodes.
+
+Typically there is 2 yaml files per pod, one for specifying deployment of the pod and one for its service. The service exposes a way to communicate with the pod, it’s like a middle man for information. Send a message to a specific port of the pod service, and it will redirect your message to a specific port of the container. Optionally, you can also open the port up to the public as a LoadBalancer which assigns an external IP address to the service.
+
+What’s the point of services? Kubernetes pods are non permanent and any amount of them could be available at any time. It shouldn’t be the frontend pod’s job to keep track of the IPs of those pods, and this is why services exist.
+
+Ingress
+—————
+Exposes HTTP routes from outside the cluster to services within the cluster. It routes the user to the service within the cluster they are looking for.
+
+Why use ingress? The issue with LoadBalancers is that if you need to expose many services, you need to create many loadBalancers. Ingress creates a set of rules that helps route your cluster. It creates an external load balancer that handles requests. It maps to the IP of the ingress and then routes based on its rules.
+
+Workflow: Ingress -> Internal Service -> Pod
+
+In order for ingress to work, and ingress controller is installed which is on its own pod. It evaluates and processes the ingress’s rules
+
+Helm
+————
+This is a package manager for Kubernetes.
+Typically someone has made a similar stack as you and created YAML files that you would find useful. This bundle of YAML files is called Helm Charts. You can create your own bundle and push them to artifcathub. Sharing helm charts is the main reason why helm became so popular.
+
+Helm also serves as a templating engine. Deployment and service configs for pods are almost the same besides different names. Without helm you would write separate yaml files, but with it you can create a common blueprint and replace the values in the blueprint with variables. The file setup when using helm:
+
+Chart.yaml -> Contains meta info bout the chart
+values.yaml -> values for the templates files. These are variables that will be used through your files.
+Charts folder -> has chart dependencies
+Templates folder -> has template dependencies
+
+Tiller is a server that runs on a kubernetes cluster. It was originally a part of helm that was used for cluster version control. It is no longer available due to it being a security risk.
+
+Jenkins
+————
+Life before Jenkins: Developers would write code and push them to a repo. When you had developers from different time zones, there could be irregular commits that resulted in integration issues, delays in testing, and more bugs. You also had to wait until entire software was built and tested before checking for errors. It was slow.
+Originally there were nightly builds where devs had to push their code by a deadline so that it could be run and tested by a machine.
+
+With Jenkins: It serves as a continuous integration tool that allows continuous development. With continuous integration, the code is pulled whenever a commit is made and all changes are built continuously. There are always running cycles to test against your code.
+
+What is continuous integration? Continuous Integration is a strategy for how a developer can integrate code to the mainline continuously, whether this be smaller tasks or some other strategy. The goal is to merge dev changes the main branch as often as possible. The devs changes are validated by creating a build and running automated tests against it. CI puts emphasis on testing automation to make sure the app isn’t broken when new commit is made.
+
+What is continuous delivery? It’s an extension of CI. It automatically deploys all code changes to a testing/production environment after the build stage. It’s an automated release process (facilitated through something like Jenkins)
+
+What is continuous deployment? Assuming all tests are passed through the CI/CD pipeline, the new change made will automatically be pushed to customers. Only a failed test will prevent a new changed from being deployed to production. (Useful image here: https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment)
+
+As a dev, you are able to pull from a repo that you’re working at any time submit your code to a continuous integration (CI) server. The goal of this server is to validate your code, pass any tests specified. If a test isn’t passed, it’s sent back to the developer. This
+1. Prevents the dev from breaking the code
+2. Makes it so devs don’t have to run all tests locally. Tests can take a while to run
+
+Jenkins pipeline: Commit code to repo -> Build it -> Test it -> Release -> Deploy/Deliver.
+Typical Jenkins Architecture: Commit code, Jenkins serves as the CI server and pulls code from the repo and then runs test against it. It will then use a build server such as maven to build the code. The final stage is to execute specific test scripts, and then finally the code should be ready for production. During any of these steps Jenkins can send emails / notify people.
+
+Jenkins master-slave architecture: Jenkins acts as a master environment and can push out work to multiple Jenkins slave environments. This allows you to run multiple builds and test simultaneously across your architecture.

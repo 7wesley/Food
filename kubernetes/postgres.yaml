@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-deployment
+  name: postgres
 spec:
   selector:
     matchLabels:
-      app: postgres-deployment
+      app: postgres
   template:
     metadata:
       labels:
-        app: postgres-deployment
+        app: postgres
     spec:
       volumes: #references to volume claims being used
       - name: postgres-storage
         persistentVolumeClaim:
-          claimName: postgres-pvc
+          claimName: postgres-claim
       containers:
       - name: db
         image: postgres
@@ -43,10 +43,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-service
+  name: postgres
 spec:
   selector:
-    app: postgres-deployment
+    app: postgres
   ports:
   - port: 5432 #service port
     targetPort: 5432 #pod port

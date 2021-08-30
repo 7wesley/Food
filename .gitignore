@@ -1,0 +1,11 @@
+#frontend
+client/old.js
+
+#backend
+server/Food-Rest-Service
+server/Makefile
+.env
+.DS_Store
+.idea
+server/vendor
+postgres-secret.yaml

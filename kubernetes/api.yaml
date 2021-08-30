@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-deployment
+  name: api
 spec:
   selector:
     matchLabels:
-      app: api-deployment
+      app: api
   template:
     metadata:
       labels:
-        app: api-deployment
+        app: api
     spec:
       containers:
       - name: server
-        image: 7wesley/foodrestserver
+        image: 7wesley/foodapi:2
         resources:
           limits:
             memory: "128Mi"
@@ -60,10 +60,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: api-service
+  name: api
 spec:
   selector:
-    app: api-deployment
+    app: api
   ports:
   - port: 10001 #service port
     targetPort: 10001 #pod port

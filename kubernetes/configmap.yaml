@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: postgres-configmap
 data:
-  host_url: postgres-service
+  host_url: postgres
   db_port: "5432"
   db_name: "wesley"
   origin_allowed: client

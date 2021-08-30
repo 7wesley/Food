@@ -6,7 +6,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-pvc
+  name: postgres-claim
 spec:
   storageClassName: standard #Minikube default
   resources:
@@ -14,4 +14,4 @@ spec:
       storage: 1Gi #Should be less than or equal to the PV
   volumeMode: Filesystem
   accessModes:
-    - ReadWriteOnce #Only one pod can read and write from this at once
+    - ReadWriteOnce #Only one pod can read and write from this at once 

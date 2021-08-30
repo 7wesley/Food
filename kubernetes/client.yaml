@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client-deployment
+  name: client
 spec:
   selector:
     matchLabels:
-      app: client-deployment
+      app: client
   template:
     metadata:
       labels:
-        app: client-deployment
+        app: client
     spec:
       containers:
       - name: client
-        image: 7wesley/foodclient:latest
+        image: 7wesley/foodclient:2
         resources:
           limits:
             memory: "128Mi"
@@ -25,10 +25,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: client-service
+  name: client
 spec:
   selector:
-    app: client-deployment
+    app: client
   ports:
   - port: 80 #service port (the port to access the service)
     targetPort: 80 #container/pod port, must match containerport

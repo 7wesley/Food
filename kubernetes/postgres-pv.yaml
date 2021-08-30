@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postgres-pv
+  name: postgres-storage
   labels:
     type: local
 spec:
@@ -12,7 +12,7 @@ spec:
   #storageClass example: azurefile
   storageClassName: standard
   capacity:
-    storage: 2Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
   #Where the volume is mounted to on the host machine

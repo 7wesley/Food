@@ -1,4 +1,4 @@
-module github.com/7wesley/Food-Rest-Service
+module github.com/7wesley/Food
 
 go 1.16
 

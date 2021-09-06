@@ -1,6 +1,11 @@
 pipeline {
     //where to execute
-	agent { label 'jenkins-slave'}
+	agent { 
+        kubernetes {
+            defaultContainer 'jnlp'
+            yamlFile 'build.yaml'
+        }
+    }
 
     environment {
         clientImage = ''
@@ -20,36 +25,43 @@ pipeline {
 
 		stage('Build images') {
             steps {
-                dir('client') {
-                    script {
-                        clientImage = docker.build clientRegistry + ":$BUILD_NUMBER"
+                container('docker') {
+                    dir('client') {
+                        script {
+                            clientImage = docker.build clientRegistry + ":latest"
+                        }
                     }
-                }
-                dir('server') {
-                    script {
-                        serverImage = docker.build serverRegistry + ":$BUILD_NUMBER"
+                    dir('server') {
+                        script {
+                            serverImage = docker.build serverRegistry + ":latest"
+                        }
+                    
                     }
-                  
                 }
             }
         }
     
         stage('Push images') {
             steps {
-                script {
-                    docker.withRegistry( '', registryCredential ) {
-                        clientImage.push()
-                        serverImage.push()
+                container('docker') {
+                    script {
+                        docker.withRegistry( '', registryCredential ) {
+                            clientImage.push()
+                            serverImage.push()
+                        }
                     }
                 }
             }
         }
 
-        stage('Clean up') {
+        stage('Deploy to kubernetes') {
             steps {
-                sh "docker rmi $clientRegistry:$BUILD_NUMBER"
-                sh "docker rmi $serverRegistry:$BUILD_NUMBER"
+                container('kubectl') {
+                    sh "kubectl -n default get pods"
+                    sh "kubectl -n default rollout restart deployment/api"
+                    sh "kubectl -n default rollout restart deployment/client"
+                }
             }
-        }
+	    }
 	}
 }

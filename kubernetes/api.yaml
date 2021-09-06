@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: server
-        image: 7wesley/foodapi:2
+        image: 7wesley/foodapi:latest
         resources:
           limits:
             memory: "128Mi"

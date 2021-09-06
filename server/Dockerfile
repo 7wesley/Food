@@ -16,4 +16,4 @@ COPY . .
 RUN go build
 
 #Commands run when container is run
-CMD ["./Food-Rest-Service"]
+CMD ["./Food"]

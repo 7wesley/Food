@@ -19,7 +19,7 @@ pipeline {
 	    
 		stage('Checkout') {
 			steps {
-                git 'https://github.com/7wesley/Food.git'
+                checkout scm
 			}
 		}
 

@@ -57,7 +57,6 @@ pipeline {
         stage('Deploy to kubernetes') {
             steps {
                 container('kubectl') {
-                    sh "kubectl -n default get pods"
                     sh "kubectl -n default rollout restart deployment/api"
                     sh "kubectl -n default rollout restart deployment/client"
                 }

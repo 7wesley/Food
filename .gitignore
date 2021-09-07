@@ -2,9 +2,9 @@
 client/old.js
 
 #backend
-server/Food-Rest-Service
+server/Food
 server/Makefile
-.env
+server/.env
 .DS_Store
 .idea
 server/vendor

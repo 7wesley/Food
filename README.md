@@ -107,6 +107,13 @@ Fill out plugin values for connecting to local kubernetes cluster:
 13. Go to build triggers and select Poll SCM. Enter `* * * * *` to poll every minute for testing.
 	* Commit a new change and Jenkins will automatically trigger a build and deploy it to the server 👍
 
+### Side-note: ArgoCD
+Optionally you can have ArgoCD manage the cluster and sync it to your gitops repository. In this case, it can be synced to the `/kubernetes` directory. A file has been provided in `/kubernetes/argocd`. Add argocd to your cluster, create namespaces & secrets, then run:
+    ```sh
+        kubectl -n argocd apply -f kubernetes/argocd
+    ```
+Instead of using Jenkins entirely for CI/CD, you could have Jenkins only update the deployment yaml to match the docker image tag, commit it, and then have ArgoCD take care of the deployment.
+
 ## Takeaways
 
 With this Jenkins pipeline, each new push to the code repository will trigger a new build. In this build, a jenkins agent is created via a pod where the repository is cloned, docker images are built, docker images are pushed to an image registry, and the kubernetes deployments are redeployed in order for them to pull from the updated image registries (the :latest image tag will always re-pull images on redeployment). This allows for a convenient continuous integration and continuous delivery system whenever a developer pushes changes to a repository. The cluster has also been integrated with persistent volume and persistent volume claims so that despite pod destruction, new postgres and jenkins pods will be mounted with their previously retained data.

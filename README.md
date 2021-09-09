@@ -108,8 +108,8 @@ Fill out plugin values for connecting to local kubernetes cluster:
 	* Commit a new change and Jenkins will automatically trigger a build and deploy it to the server 👍
 
 ### Side-note: ArgoCD
-Optionally you can have ArgoCD manage the cluster and sync it to your gitops repository. In this case, it can be synced to the `/kubernetes` directory. A file has been provided in `/kubernetes/argocd`. Add argocd to your cluster, create namespaces & secrets, then run:
-    ```sh
+Optionally you can have ArgoCD manage the cluster and sync it to your gitops repository. In this case, it can be synced to the `/kubernetes` directory. A file has been provided in `/kubernetes/argocd`. Add argocd to your cluster, create namespaces & secrets, then run
+    ```
         kubectl -n argocd apply -f kubernetes/argocd
     ```
 Instead of using Jenkins entirely for CI/CD, you could have Jenkins only update the deployment yaml to match the docker image tag, commit it, and then have ArgoCD take care of the deployment.
